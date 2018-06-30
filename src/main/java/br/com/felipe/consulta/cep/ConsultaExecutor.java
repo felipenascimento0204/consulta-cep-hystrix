@@ -1,5 +1,7 @@
 package br.com.felipe.consulta.cep;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -19,9 +21,14 @@ public class ConsultaExecutor {
     }
 
     private String consultarCep() {
+
         try {
 
-            URL url = new URL(ENDPOINT_CONSULTA_CEP + this.cep);
+            if(StringUtils.isBlank(this.cep)){
+                return "{\"message\": \"CEP INVALIDO\"}";
+            }
+
+            URL url = new URL(ENDPOINT_CONSULTA_CEP + this.cep.replace("-",""));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
